@@ -28,6 +28,10 @@ const P5SketchWithAudio = () => {
 
         p.PPQ = 3840 * 4;
 
+        p.bpm = 106;
+
+        p.barAsSeconds = 60 / p.bpm * 1;
+
         p.loadMidi = () => {
             Midi.fromUrl(midi).then(
                 function(result) {
@@ -100,66 +104,52 @@ const P5SketchWithAudio = () => {
                     new AnimatedTriangle(p, p.createVector(x, y), currentColour, size, p.direction)
                 )
             }
-
-            p.tri = p.triangles[0];
-            p.tri2 = p.triangles[300];
         }
 
         p.draw = () => {
-            p.background(0);
-            p.tri.draw();
-            p.tri2.draw();
-            console.log(p.audioLoaded);
-            console.log(p.song.isPlaying());
             if(p.audioLoaded && p.song.isPlaying()){
-
+                p.background(0);
+                for (let i = 0; i < p.triangles.length; i++) {
+                    const triangle = p.triangles[i];
+                    triangle.draw();
+                }
             }
         }
 
         p.largeTriIndex = 0;
-        p.cueSet1CurrentNote = '';
+        p.largeTriMidiNotes = [55, 57, 60, 50];
+        p.cueSet1CurrentMidi = '';
+
 
         p.executeCueSet1 = (note) => {
-            const { duration, midi } = note;
-            console.log(midi);
-            // let addCircle = false,
-            //     hue = 0,
-            //     saturation = 0,
-            //     brightness = 0, 
-            //     alpha = 1,
-            //     delayAmount = duration * 1000;
-            // p.stroke(0);
+            const { midi } = note;
+            let addTri = false, 
+                duration = p.barAsSeconds;
+
+            if(p.cueSet1CurrentMidi != midi && p.largeTriMidiNotes.includes(midi)) {
+                p.cueSet1CurrentMidi = midi;
+                addTri = true;
+            }
+
+            if(addTri){
+                const triangle = p.triangles[p.largeTriIndex];
+                triangle.setLifeTime(duration * 1000);
+               
+                triangle.canDraw = true;
+                p.largeTriIndex++
+            }
             
             // switch (midi) {
-            //     case 36:
-            //         addCircle = true;
-            //         brightness = 100;
+            //     case 55:
             //         break;
-            //     case 37:
-            //         addCircle = true;
+            //     case 57:
             //         break;
-            //     case 42:
-            //         addCircle = true;
-            //         hue = p.random(0, 360);
-            //         saturation = 100;
-            //         brightness = 100;
-            //         alpha = 0.1;
+            //     case 60:
             //         break;
-            //     case 44:
-            //         addCircle = true;
-            //         p.mediumCircleHue = p.mediumCircleIndexCount === 0 ? p.random(0, 360) : p.mediumCircleHue;
-            //         saturation = 75;
-            //         brightness = 75;
-            //         break;
-            //     case 45:
-            //         addCircle = true;
-            //         hue = p.bgHue;
-            //         saturation = 100;
-            //         brightness = 100;
-            //         alpha = 0.5;
+            //     case 50:
             //         break;
             //     default:
-            //         addCircle = false;
+            //         //addCircle = false;
             //         break;
             // }
         }

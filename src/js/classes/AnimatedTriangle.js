@@ -59,7 +59,8 @@ export default class AnimatedTriangle {
 
     setLifeTime(lifetime) {
         const frameRate = this.p.getFrameRate() ? this.p.getFrameRate() : 60;
-        this.totalsFrames = frameRate * lifetime;
+        this.totalFrames = frameRate / 1000 * lifetime;
+         console.log(this.totalFrames);
     }
 
     draw() {
@@ -70,8 +71,8 @@ export default class AnimatedTriangle {
             this.p.strokeWeight(this.size / 48);
             this.p.noStroke();
 
-            if(this.currentFrame < this.totalsFrames){
-                const scale = this.p.min(1, (this.currentFrame * 1000) / this.totalsFrames),
+            if(this.currentFrame < this.totalFrames){
+                const scale = this.p.min(1, this.currentFrame / this.totalFrames),
                     dist = window.p5.Vector.sub(this.destination, this.origin).mult(scale),
                     pos = window.p5.Vector.add(this.origin, dist);
                 this.p.translate(pos.x, pos.y);
