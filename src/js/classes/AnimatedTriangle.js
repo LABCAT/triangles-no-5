@@ -68,28 +68,28 @@ export default class AnimatedTriangle {
             const x1 = this.size * this.p.cos(0), y1 = this.size * this.p.sin(0);
             const x2 = this.size * this.p.cos(120), y2 = this.size * this.p.sin(120);
             const x3 = this.size * this.p.cos(240), y3 = this.size * this.p.sin(240);
-            this.p.strokeWeight(this.size / 48);
-            this.p.noStroke();
+            let pos = this.destination;
 
             if(this.currentFrame < this.totalFrames){
                 const scale = this.p.min(1, this.currentFrame / this.totalFrames),
-                    dist = window.p5.Vector.sub(this.destination, this.origin).mult(scale),
-                    pos = window.p5.Vector.add(this.origin, dist);
-                this.p.translate(pos.x, pos.y);
-                this.p.rotate(this.direction);
-                this.p.fill(this.colour);
-                this.p.triangle(x1, y1, x2, y2, x3, y3);
-                this.p.scale(0.9);
-                this.p.fill(this.colour._getHue(), 100, 25);
-                this.p.triangle(0, 0, x2, y2, x3, y3);
-                this.p.fill(this.colour._getHue(), 100, 50);
-                this.p.triangle(x1, y1, 0, 0, x3, y3);
-                this.p.fill(this.colour._getHue(), 100, 75);
-                this.p.triangle(x1, y1, x2, y2, 0, 0);
-                this.p.rotate(-this.direction);
-                this.p.translate(-pos.x, -pos.y);
-                this.currentFrame++;
+                    dist = window.p5.Vector.sub(this.destination, this.origin).mult(scale);
+                pos = window.p5.Vector.add(this.origin, dist);
             }
+            this.p.noStroke();
+            this.p.translate(pos.x, pos.y);
+            this.p.rotate(this.direction);
+            this.p.fill(this.colour);
+            this.p.triangle(x1, y1, x2, y2, x3, y3);
+            this.p.scale(0.9);
+            this.p.fill(this.colour._getHue(), 100, 25);
+            this.p.triangle(0, 0, x2, y2, x3, y3);
+            this.p.fill(this.colour._getHue(), 100, 50);
+            this.p.triangle(x1, y1, 0, 0, x3, y3);
+            this.p.fill(this.colour._getHue(), 100, 75);
+            this.p.triangle(x1, y1, x2, y2, 0, 0);
+            this.p.rotate(-this.direction);
+            this.p.translate(-pos.x, -pos.y);
+            this.currentFrame++;
         }
     }
 }
