@@ -15,26 +15,26 @@ export default class AnimatedTriangle {
         switch (direction) {
             case 'n-e':
                 this.origin = this.p.createVector(
-                    this.destination.x - this.p.width, 
-                    this.destination.y + this.p.height
+                   0, 
+                   this.p.height
                 );
                 break;
             case 's-e':
                 this.origin = this.p.createVector(
-                    this.destination.x - this.p.width, 
-                    this.destination.y - this.p.height
+                    0, 
+                    0
                 );
                 break;
             case 'n-w':
                 this.origin = this.p.createVector(
-                    this.destination.x + this.p.width, 
-                    this.destination.y + this.p.height
+                    this.p.width, 
+                    this.p.height
                 );
                 break;
             case 's-w':
                 this.origin = this.p.createVector(
-                    this.destination.x + this.p.width, 
-                    this.destination.y - this.p.height
+                    this.p.width, 
+                    0
                 );
                 break;
         }
@@ -60,7 +60,6 @@ export default class AnimatedTriangle {
     setLifeTime(lifetime) {
         const frameRate = this.p.getFrameRate() ? this.p.getFrameRate() : 60;
         this.totalFrames = frameRate / 1000 * lifetime;
-         console.log(this.totalFrames);
     }
 
     draw() {
@@ -75,20 +74,29 @@ export default class AnimatedTriangle {
                     dist = window.p5.Vector.sub(this.destination, this.origin).mult(scale);
                 pos = window.p5.Vector.add(this.origin, dist);
             }
+            this.p.push();
             this.p.noStroke();
             this.p.translate(pos.x, pos.y);
             this.p.rotate(this.direction);
             this.p.fill(this.colour);
             this.p.triangle(x1, y1, x2, y2, x3, y3);
             this.p.scale(0.9);
-            this.p.fill(this.colour._getHue(), 100, 25);
+            this.p.fill(this.colour._getHue(), 100, 25, this.colour._getAlpha());
             this.p.triangle(0, 0, x2, y2, x3, y3);
-            this.p.fill(this.colour._getHue(), 100, 50);
+            this.p.fill(this.colour._getHue(), 100, 50, this.colour._getAlpha());
             this.p.triangle(x1, y1, 0, 0, x3, y3);
-            this.p.fill(this.colour._getHue(), 100, 75);
+            this.p.fill(this.colour._getHue(), 100, 75, this.colour._getAlpha());
             this.p.triangle(x1, y1, x2, y2, 0, 0);
+            this.p.stroke(360);
+            this.p.noFill();
+            this.p.scale(0.8);
+            this.p.triangle(0, 0, x2, y2, x3, y3);
+            this.p.triangle(x1, y1, 0, 0, x3, y3);
+            this.p.triangle(x1, y1, x2, y2, 0, 0);
+            this.p.scale(1.3);
             this.p.rotate(-this.direction);
             this.p.translate(-pos.x, -pos.y);
+            this.p.pop();
             this.currentFrame++;
         }
     }

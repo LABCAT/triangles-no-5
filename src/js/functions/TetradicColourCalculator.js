@@ -8,9 +8,10 @@ function TetradicColourCalulator(p5, hue, saturation = 100, brightness = 100) {
           hue,
           saturation,
           brightness,
+          1
         );
-        i++;
         set.push(colour);
+        i++;
     }
 
 
