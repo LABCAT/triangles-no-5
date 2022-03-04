@@ -36,7 +36,6 @@ const P5SketchWithAudio = () => {
         p.loadMidi = () => {
             Midi.fromUrl(midi).then(
                 function(result) {
-                    console.log(result);
                     const noteSet1 = result.tracks[0].notes; // Sampler 1 -- TwinkleStars
                     const noteSet2 = result.tracks[6].notes; // Dr Rex 2 -- FunkHat
                     const noteSet3 = result.tracks[7].notes; // Thor 1 -- Scan Dance
@@ -74,7 +73,6 @@ const P5SketchWithAudio = () => {
         } 
 
         p.directions = ['n-w', 's-w', 'n-e', 's-e'];
-        p.directionsIndex = 0;
 
         p.triangles = [];
 
@@ -94,27 +92,27 @@ const P5SketchWithAudio = () => {
                 y = 0,
                 size = 0; 
 
-            while(p.packedTrianglesSet.length < 328) {
+            while(p.packedTrianglesSet.length < 222) {
                 x = p.random(0, p.width);
                 y = p.random(0, p.height);
-                if(p.packedTrianglesSet.length >= 160) {
+                if(p.packedTrianglesSet.length >= 106) {
+                    p.direction = p.directions[3];
                     size = p.random(p.width/96, p.width/128);
                     currentColour = p.colourScheme[3];
                 }
-                else if(p.packedTrianglesSet.length >= 130) {
+                else if(p.packedTrianglesSet.length >= 76) {
+                    p.direction = p.directions[1];
                     size = p.random(p.width/16, p.width/32);
                     currentColour = p.colourScheme[2];
                 }
                 else if(p.packedTrianglesSet.length >= 20) {
-                    size = p.random(p.width/64, p.width/96);
+                    p.direction = p.directions[2];
+                    size = p.random(p.width/48, p.width/80);
                     currentColour = p.colourScheme[1];
                 }
                 else {
+                    p.direction = p.directions[0];
                     size = p.random(p.width/32, p.width/64);
-                }
-                if([20, 130, 160].includes(p.packedTrianglesSet.length)){
-                    p.directionsIndex++;
-                    p.direction = p.directions[p.directionsIndex];
                 }
                 const tri = {
                     x: x,
@@ -172,23 +170,36 @@ const P5SketchWithAudio = () => {
 
         p.mediumTriIndex = 20;
 
+        p.smallTriIndex = 106;
+
         p.executeCueSet2 = (note) => {
             const { currentCue, duration } = note;
-            let addTri = false;
+            let addTri = false, 
+                medTri = false;
 
             if([1, 2, 3, 6, 7, 10, 11, 12, 16, 17, 18].includes(currentCue % 20)){
                 addTri = true;
+
+                if([3, 7, 12, 18].includes(currentCue % 20)){
+                    medTri = true
+                }
             }      
 
             if(addTri){
-                const triangle = p.triangles[p.mediumTriIndex];
+                const triangle = medTri ? p.triangles[p.mediumTriIndex] : p.triangles[p.smallTriIndex];
                 triangle.setLifeTime(duration * 1000);
                 triangle.canDraw = true;
-                p.mediumTriIndex++
+                if(medTri) {
+                    p.mediumTriIndex++
+                }
+                else {
+                    p.smallTriIndex++
+                }
+                
             }
         }
 
-        p.giantTriIndex = 130;
+        p.giantTriIndex = 76;
 
         p.executeCueSet3 = (note) => {
             const { currentCue } = note;
@@ -209,21 +220,29 @@ const P5SketchWithAudio = () => {
             }
         }
 
-        p.smallTriIndex = 160;
-
         p.executeCueSet4 = (note) => {
             const { currentCue, duration } = note;
-            let addTri = false;
+            let addTri = false, 
+                medTri = false;
 
-            if([1, 4, 6, 7, 10, 11, 13,17, 18, 20].includes(currentCue % 20)){
+            if([1, 4, 6, 7, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20].includes(currentCue % 20)){
                 addTri = true;
+
+                if([4, 9, 12, 19].includes(currentCue % 20)){
+                    medTri = true
+                }
             }      
 
             if(addTri){
-                const triangle = p.triangles[p.smallTriIndex];
+                const triangle = medTri ? p.triangles[p.mediumTriIndex] : p.triangles[p.smallTriIndex];
                 triangle.setLifeTime(duration * 1000);
                 triangle.canDraw = true;
-                p.smallTriIndex++
+                if(medTri) {
+                    p.mediumTriIndex++
+                }
+                else {
+                    p.smallTriIndex++
+                }
             }
         }
 

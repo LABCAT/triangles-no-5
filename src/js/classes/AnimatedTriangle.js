@@ -41,18 +41,19 @@ export default class AnimatedTriangle {
     }
 
     setDirection(direction) {
+        this.direction = direction;
         switch (direction) {
             case 'n-e':
-                this.direction = -30;
+                this.rotationDirection = -30;
                 break;
             case 's-e':
-                this.direction = 30;
+                this.rotationDirection = 30;
                 break;
             case 'n-w':
-                this.direction = -150;
+                this.rotationDirection = -150;
                 break;
             case 's-w':
-                this.direction = 150;
+                this.rotationDirection = 150;
                 break;
         }
     }
@@ -77,7 +78,7 @@ export default class AnimatedTriangle {
             this.p.push();
             this.p.noStroke();
             this.p.translate(pos.x, pos.y);
-            this.p.rotate(this.direction);
+            this.p.rotate(this.rotationDirection);
             this.p.fill(this.colour);
             this.p.triangle(x1, y1, x2, y2, x3, y3);
             this.p.scale(0.9);
@@ -89,12 +90,12 @@ export default class AnimatedTriangle {
             this.p.triangle(x1, y1, x2, y2, 0, 0);
             this.p.stroke(360);
             this.p.noFill();
-            this.p.scale(0.8);
+            this.p.scale(0.83333);
             this.p.triangle(0, 0, x2, y2, x3, y3);
             this.p.triangle(x1, y1, 0, 0, x3, y3);
             this.p.triangle(x1, y1, x2, y2, 0, 0);
-            this.p.scale(1.3);
-            this.p.rotate(-this.direction);
+            this.p.scale(1.33333);
+            this.p.rotate(-this.rotationDirection);
             this.p.translate(-pos.x, -pos.y);
             this.p.pop();
             this.currentFrame++;
